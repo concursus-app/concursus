@@ -2,8 +2,13 @@
 
 ## Endpoints
 
-`/ensure-conn` (admin-only): Ensures that connections can be made to our database
-`/make-tables` (admin-only): Creates the SQL tables that will store all our data
+- `/admin/ensure-conn`: Ensures that connections can be made to our database
+- `/admin/make-tables`: Creates the SQL tables that will store all our data
+- `/admin/drop-tables`: Drops all data in our SQL tables
+- `/admin/all-users`: Fetches all users' usernames and email ids.
+> [!CAUTION]
+> Remove the /drop-tables endpoint before shipping to prod.
+- `/auth/register`: Register a user (POST request, user data in request body as json data.)
 
 ## Tables
 ### Users

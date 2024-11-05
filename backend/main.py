@@ -1,56 +1,18 @@
 import time
 from flask import Flask, request
-from .utils.database_handler import make_connection
-from .utils.database_handler import make_tables as mt
-from .utils.database_handler import drop_tables as dt
-from .utils import admin_only
 
 from .routes.auth import app as auth_app
+from .routes.admin import app as admin_app 
 
 app = Flask(__name__)
 app.register_blueprint(auth_app, url_prefix='/auth')
+app.register_blueprint(admin_app, url_prefix='/admin')
 
 print(app.url_map)
 
-TABLES = {}
-TABLES['users'] = (
-    "CREATE TABLE `users` ("
-    "`user_id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,"
-    "`email` VARCHAR(255) NOT NULL,"
-    "`username` VARCHAR(50) NOT NULL,"
-    "`password` BINARY(64) NOT NULL,"
-    "`salt` CHAR(29) NOT NULL,"
-    "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-    "`bio` TEXT,"
-    "PRIMARY KEY (`user_id`)"
-    ") ENGINE=InnoDB"
-)
 
 @app.route('/time')
 def get_time():
     """Test function"""
     return {'time': int(time.time())}
-
-@app.route('/ensure-conn')
-@admin_only
-def get_conn():
-    """ Ensures that connections can be made. """
-    cnx = make_connection()
-    return {
-        'status': 200,
-        'success': cnx is not None
-    }
-
-
-@app.route('/make-tables')
-@admin_only
-def make_tables():
-    """ Makes the required tables """
-    return mt(TABLES)
-
-@app.route('/drop-tables')
-@admin_only
-def drop_tables():
-    """ Drops all tables """
-    return dt(TABLES)
 

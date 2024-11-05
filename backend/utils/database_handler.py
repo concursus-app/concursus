@@ -112,37 +112,27 @@ def check_user_exists(username: str | None = None, email: str | None = None) -> 
             'details': 'Could not make connection to database'
         }
 
-    with cnx.cursor() as cursor:
+    with cnx.cursor(buffered=True) as cursor:
         if username:
-            res = cursor.execute(
+            cursor.execute(
                 "SELECT username FROM users "
                 "WHERE username = %s",
                 (username,)
             )
-            try:
-                cnx.close()
-                return next(res) # pyright: ignore
-            except (StopIteration, TypeError):
-                # User with given username doesn't exist, but the email may still be in use.
-                # Thus, we pass here to go onto the email check (if, the email has been specified.)
-                pass
+            if cursor.fetchone():
+                return True
         
         if email:
-            res = cursor.execute(
+            cursor.execute(
                 "SELECT email FROM users "
                 "WHERE email = %s",
                 (email,)
             )
-            cnx.close()
             
-            try:
-                return next(res) # type: ignore
-            except (StopIteration, TypeError):
-                # Neither the username check nor the email check gave any results.
-                return False
+            return cursor.fetchone() is not None
 
-        cnx.close()
-        return False
+    # If this runs, something is fucked up.
+    return False
 
 def drop_tables(tables):
     cnx = make_connection()  
@@ -196,4 +186,25 @@ def register_user(email, username, password):
     return {
         'status': 200
     }
+
+def fetch_all_users():
+    cnx = make_connection()
+    if not cnx:
+        return {
+            'status': 503,
+            'details': 'Could not make connection to database'
+        }
+
+
+    with cnx.cursor() as cursor:
+        cursor.execute("SELECT username, email FROM users")
+        res = cursor.fetchall()
+
+    cnx.close()
+
+    return {
+        'status': 200,
+        'details': res
+    }
+
 
