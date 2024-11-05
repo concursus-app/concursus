@@ -2,9 +2,15 @@ import time
 from flask import Flask, request
 from .utils.database_handler import make_connection
 from .utils.database_handler import make_tables as mt
+from .utils.database_handler import drop_tables as dt
 from .utils import admin_only
 
+from .routes.auth import app as auth_app
+
 app = Flask(__name__)
+app.register_blueprint(auth_app, url_prefix='/auth')
+
+print(app.url_map)
 
 TABLES = {}
 TABLES['users'] = (
@@ -12,8 +18,8 @@ TABLES['users'] = (
     "`user_id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,"
     "`email` VARCHAR(255) NOT NULL,"
     "`username` VARCHAR(50) NOT NULL,"
-    "`password` CHAR(32) NOT NULL,"
-    "`salt` CHAR(32) NOT NULL,"
+    "`password` BINARY(64) NOT NULL,"
+    "`salt` CHAR(29) NOT NULL,"
     "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
     "`bio` TEXT,"
     "PRIMARY KEY (`user_id`)"
@@ -41,4 +47,10 @@ def get_conn():
 def make_tables():
     """ Makes the required tables """
     return mt(TABLES)
+
+@app.route('/drop-tables')
+@admin_only
+def drop_tables():
+    """ Drops all tables """
+    return dt(TABLES)
 

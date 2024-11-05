@@ -11,21 +11,26 @@ The users table holds data about all the users.
 Passwords are stored through the following processes:
 
 ```
-+----------+     +------+       +-----------------+  MD5 Hashing  +------+  Into the DB
-| Password |  +  | Salt |  ===> | Salted Password |  ===========> | Hash |  ===========>
-+----------+     +------+       +-----------------+               +------+
++----------------+
+| bcrypt.saltgen |
++----------------+
+    ||
+    VV
+ +------+     +----------+     +----------------+  hashlib.scrypt   +-----------------+  Into DB
+ | Salt |  ,  | Password |  ,  | Hashing Params |  ==============>  | Hashed password |  =======>
+ +------+     +----------+     +----------------+                   +-----------------+
+ 29 chars                                                              64 long binary   
 ```
 
 Fields:
-1. `user_id`
-2. `email`
-3. `username`
-4. `password`
-5. `salt`
-6. `created_at`
-7. `bio`
+1. `user_id` - MEDIUMINT(8)
+2. `email` - VARCHAR(255)
+3. `username` - VARCHAR(50)
+4. `password` - BINARY(64)
+5. `salt` - CHAR(29)
+6. `created_at` - TIMESTAMP
+7. `bio` - TEXT
 
 > [!NOTE]
 > Should emails also be hashed?
-> What other fields should be added to the user table?
-
+> What other fields should be added to the user table? (See [Issue #1](https://github.com/concursus-app/concursus/issues/1))

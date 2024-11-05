@@ -3,6 +3,8 @@ import logging
 import time
 import dotenv
 import os
+import bcrypt
+import hashlib
 
 from mysql.connector.abstracts import MySQLConnectionAbstract 
 from mysql.connector.pooling import PooledMySQLConnection
@@ -27,6 +29,9 @@ config = {
 }
 
 def make_connection(attempts: int = 3, delay: int = 2) -> PooledMySQLConnection | MySQLConnectionAbstract | None:
+    """
+    Creates a connection to the database as specified by the `config` dict.
+    """
     attempt = 1
     while attempt < attempts + 1:
         try:
@@ -52,13 +57,23 @@ def make_connection(attempts: int = 3, delay: int = 2) -> PooledMySQLConnection 
     return None
 
 def make_tables(tables: dict[str, str]):
+    """
+    Makes the tables provided in the tables dict.
+
+    Args:
+        tables: A dict of table name to table creation command
+
+    Returns:
+        A response dict
+    """
+
     cnx = make_connection()
     if not cnx:
         return {
             'status': 503,
             'details': 'Could not make connection to database'
         }
-
+    
     created_tables = 0
     failed_tables = []
     with cnx.cursor(buffered=True) as cursor:
@@ -83,5 +98,102 @@ def make_tables(tables: dict[str, str]):
             'total_tables': len(tables),
             'failed_tables': failed_tables
         }
+    }
+
+def check_user_exists(username: str | None = None, email: str | None = None) -> bool | dict:
+    if not (username or email):  # Neither username nor email was specified:
+        logging.error("`check_user_exists` called without username and email parameters.")
+        return False
+
+    cnx = make_connection()
+    if not cnx:
+        return {
+            'status': 503,
+            'details': 'Could not make connection to database'
+        }
+
+    with cnx.cursor() as cursor:
+        if username:
+            res = cursor.execute(
+                "SELECT username FROM users "
+                "WHERE username = %s",
+                (username,)
+            )
+            try:
+                cnx.close()
+                return next(res) # pyright: ignore
+            except (StopIteration, TypeError):
+                # User with given username doesn't exist, but the email may still be in use.
+                # Thus, we pass here to go onto the email check (if, the email has been specified.)
+                pass
+        
+        if email:
+            res = cursor.execute(
+                "SELECT email FROM users "
+                "WHERE email = %s",
+                (email,)
+            )
+            cnx.close()
+            
+            try:
+                return next(res) # type: ignore
+            except (StopIteration, TypeError):
+                # Neither the username check nor the email check gave any results.
+                return False
+
+        cnx.close()
+        return False
+
+def drop_tables(tables):
+    cnx = make_connection()  
+    if not cnx:
+        return {
+            'status': 503,
+            'details': 'Could not make connection to database'
+        }
+
+    with cnx.cursor() as cursor:
+        for table in tables:
+            cursor.execute(f"DROP TABLE {table}")
+
+        cnx.commit()
+
+    cnx.close()
+
+    return {
+        'status': 200
+    }
+
+
+def register_user(email, username, password):
+    cnx = make_connection()
+    if not cnx:
+        return {
+            'status': 503,
+            'details': 'Could not make connection to database'
+        }
+
+    with cnx.cursor() as cursor:
+        salt = bcrypt.gensalt()  # 29 bytes long
+        hashed_password = hashlib.scrypt(
+            bytes(password, encoding='utf-8'),
+            salt=salt,
+            n=2 ** 14,
+            r=8,
+            p=1
+        )  # 64 long binary
+
+        cursor.execute(
+            "INSERT INTO users "
+            "(email, username, password, salt, bio) "
+            "VALUES (%s, %s, %s, %s, '')",
+            (email, username, hashed_password, salt)
+        )
+
+    cnx.commit()
+    cnx.close()
+
+    return {
+        'status': 200
     }
 
