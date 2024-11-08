@@ -1,4 +1,4 @@
-.input > input, .row > button {
+.input > input, .input > input:focus, .row > button {
   background-color: #051633;
   border: none;
 
