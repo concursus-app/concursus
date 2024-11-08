@@ -72,17 +72,16 @@ Fields:
 | 3 | `organizers` | (Many-to-Many relation)? |
 | 4 | `bio` | `TEXT` |
 | 5 | `website` | `TEXT`? |
-| 6 | `committees` | `FOREIGN KEY TO COMMITTEES TABLE` |
-| 7 | `registered_users` | (Many-to-Many relation)? |
-| 8 | `registered_delegations` | (Many-to-Many relation)? |
-| 9 | `icon` | (Imgur link)? |
-| 10 | `banner` | (Imgur link)? |
-| 11 | `reg_fee` | `INT NULLABLE`? |
-| 12 | `best_delegate_prize` | `INT NULLABLE`? |
-| 13 | `outstanding_delegate_prize` | `INT NULLABLE`? |
-| 14 | `commendable_delegate_prize` | `INT NULLABLE`? |
-| 15 | `start_date` | `DATE`? |
-| 16 | `end_date` | `DATE`? |
+| 6 | `registered_users` | (Many-to-Many relation)? |
+| 7 | `registered_delegations` | (Many-to-Many relation)? |
+| 8 | `icon` | (Imgur link)? |
+| 9 | `banner` | (Imgur link)? |
+| 10 | `reg_fee` | `INT NULLABLE`? |
+| 11 | `best_delegate_prize` | `INT NULLABLE`? |
+| 12 | `outstanding_delegate_prize` | `INT NULLABLE`? |
+| 13 | `commendable_delegate_prize` | `INT NULLABLE`? |
+| 14 | `start_date` | `DATE`? |
+| 15 | `end_date` | `DATE`? |
 
 MUNs will stay in the database unless deleted, even after their completion. 
 This property will be used to map users and the MUNs they have attended.
