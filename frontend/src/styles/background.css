@@ -1,0 +1,41 @@
+#background {
+  position: fixed;
+
+  height: 100%;
+  width: 100%;
+
+  z-index: -1;
+
+  overflow: hidden;
+  background-color: var(--background-color);
+}
+
+.circle {
+  width: 25%;
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  position: absolute;
+
+  filter: blur(500px);
+
+  &:nth-child(1) {
+    top: -12.5%;
+    left: -7.5%;
+    background-color: #0A3175;
+  }
+
+  &:nth-child(2) {
+    top: 65%;
+    left: -5%;
+
+    background-color: #051149;
+  }
+
+  &:nth-child(3) {
+    top: 65%;
+    left: 85%;
+
+    background-color: #12C2FE;
+  }
+}
+

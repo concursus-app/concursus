@@ -1,15 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+import Root from "./root"
+import Login from "./pages/login"
+import Register from "./pages/register"
+
+import Navbar from "./components/navbar"
+import Background from "./components/background"
+
+import {
+  Routes,
+  Route,
+  BrowserRouter
+} from "react-router-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+  <Background/>
+  <Navbar/>
+  <div style={{width: "80%", marginLeft: "auto", marginRight: "auto"}}>
+  <BrowserRouter>
+    <Routes>
+      <Route path="" element={<Root/>}/>
+      <Route path="login" element={<Login/>}/>
+      <Route path="register" element={<Register/>}/>
+    </Routes>
+  </BrowserRouter>
+  </div>
   </React.StrictMode>
 );
 

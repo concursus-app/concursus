@@ -197,8 +197,10 @@ def fetch_all_users():
 
 
     with cnx.cursor() as cursor:
-        cursor.execute("SELECT username, email FROM users")
+        cursor.execute("SELECT username, email, password FROM users")
         res = cursor.fetchall()
+
+    res = [(elem[0], elem[1], str(elem[2])) for elem in res]
 
     cnx.close()
 

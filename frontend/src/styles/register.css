@@ -1,0 +1,54 @@
+.input > input, .row > button {
+  background-color: #051633;
+  border: none;
+
+  height: 25px;
+  font-size: 20px;
+}
+
+.input {
+  display: flex;
+
+  background-color: #051633;
+  padding: 2.5%;
+  border-radius: 50px;
+
+  margin: 2.5% 2.5% 2.5% 0; 
+  width: 33%;
+  min-width: fit-content;
+
+  & > * {
+    flex: 1;
+  }
+
+  & span {
+    height: 30px;
+    max-width: 30px;
+    aspect-ratio: 1/1;
+  }
+}
+
+#register-form {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+
+  & .row {
+    display: flex;
+  }
+}
+
+.row button {
+  background: none;
+  color: var(--text-color);
+  border: none;
+  font-size: 1.5em;
+  font-weight: 600;
+
+  letter-spacing: 1.5px;
+}
+
+.input:has(#login-instead) {
+  background: none;
+  border: 2px solid #12C2FE;
+}
