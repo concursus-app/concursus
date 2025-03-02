@@ -1,8 +1,10 @@
 <div id="navbar">
-  <a>concursus</a>
-  <a>about</a>
-  <a>explore</a>
-  <a>contact</a>
+  <a href="/">CONCURSUS</a>
+  <div id="lefty">
+    <a>about</a>
+    <a>explore</a>
+    <a>contact</a>
+  </div>
 </div>
 
 <style lang="css">
@@ -10,16 +12,20 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+
+    height: var(--navbar-height);
   }
 
   #navbar a {
     text-decoration: none;
     font-size: 1.2rem;
-    color: var(--primary);
+    color: var(--text);
 
     transition-duration: 200ms;
-    padding: 1rem 0rem;
-    font-weight: 600;
+    padding: 1rem 0;
+    cursor: pointer;
+
+    letter-spacing: 0.2rem;
   }
 
   #navbar > a:first-child {
@@ -30,5 +36,12 @@
     color: var(--text);
 
     transition-duration: 200ms;
+  }
+
+  #lefty {
+    flex-basis: 50%;
+
+    display: flex;
+    justify-content: space-between;
   }
 </style>

@@ -1,10 +1,13 @@
 <script lang="ts">
   import Navbar from "../components/navbar.svelte";
-  // import main.js
-  import "../main.js";
+  import "../app.css";
 
   let { children } = $props();
 </script>
+
+<svelte:head>
+  <title>Concursus</title>
+</svelte:head>
 
 <main>
   <Navbar />
@@ -13,7 +16,7 @@
 
 <style lang="css">
   main {
-    width: 75vw;
+    width: 70vw;
 
     margin: 0 auto;
   }

@@ -1,9 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap');
+
 :root {
-  --text: #f1e3dd;
-  --background: #0b0603;
-  --primary: #e7aa90;
-  --secondary: #863613;
-  --accent: #ef672b;
+  --base: #24273a;
+  --mantle: #1e2030;
+  --crust: #181926;
+  --surface-0: #363a4f;
+  --surface-1: #494d64;
+  --surface-2: #5b6078;
+  --overlay-0: #6e738d;
+  --overlay-1: #8087a2;
+  --overlay-2: #939ab7;
+  --subtext-0: #a5adcb;
+  --subtext-1: #b8c0e0;
+  --text: #cad3f5;
+
+  --accent: #8aadf4;  /* blue */
+
+
+  --navbar-height: 5vh;
 }
 
 html {
@@ -19,6 +33,6 @@ body {
   padding: 0;
 
   color: var(--text);
-  background-color: var(--background);
-  font-family: 'Roboto', sans-serif;
+  background-color: var(--base);
+  font-family: 'Outfit', sans-serif;
 }
