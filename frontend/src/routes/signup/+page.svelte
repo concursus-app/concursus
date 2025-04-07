@@ -1,11 +1,23 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import type { PageProps } from "./$types";
+
+  let { data, form }: PageProps = $props();
+
+  const colors = [
+    "#8aadf4",
+    "#a6da95",
+    "#eed49f",
+    "#ed8796",
+    "#c6a0f6",
+    "#f5bde6",
+  ];
 
   onMount(() => {
     createFuzzBalls("fuzzballs");
   });
 
-  const createFuzzBalls = (element) => {
+  const createFuzzBalls = (element: string) => {
     const fuzzballs = document.getElementById(element);
 
     for (let i = 0; i < 10; i++) {
@@ -15,7 +27,10 @@
       fuzzball.style.width = "7.5em";
       fuzzball.style.height = "7.5em";
       fuzzball.style.borderRadius = "100%";
-      fuzzball.style.backgroundColor = "var(--text)";
+      // Random color in colors list
+
+      fuzzball.style.backgroundColor =
+        colors[Math.floor(Math.random() * colors.length)];
 
       fuzzball.style.top = `${Math.random() * 80 + 5}vh`;
       fuzzball.style.left = `${Math.random() * 80 + 5}vw`;
@@ -30,15 +45,25 @@
 <div id="parent">
   <div id="form-container">
     <h1>Create your Concursus.</h1>
-    <form>
+    {#if form?.success}
+      <p>Sigma</p>
+    {/if}
+    <p>{data.name}</p>
+    <form method="POST">
       <div id="left-fields">
         <div class="input-field">
           <label for="username">username</label>
-          <input type="text" id="username" name="username" required />
+          <input
+            type="text"
+            id="username"
+            name="username"
+            maxlength="50"
+            required
+          />
         </div>
         <div class="input-field">
-          <label for="username">username</label>
-          <input type="text" id="username" name="username" required />
+          <label for="email">email</label>
+          <input type="email" id="email" name="email" required />
         </div>
         <div class="input-field">
           <input type="submit" value="CREATE ACCOUNT" />
@@ -46,12 +71,17 @@
       </div>
       <div id="right-fields">
         <div class="input-field">
-          <label for="username">username</label>
-          <input type="text" id="username" name="username" required />
+          <label for="password">password</label>
+          <input type="password" id="password" name="password" required />
         </div>
         <div class="input-field">
-          <label for="username">username</label>
-          <input type="text" id="username" name="username" required />
+          <label for="confirm-password">confirm password</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            required
+          />
         </div>
         <div class="input-field">
           <input type="button" value="LOGIN INSTEAD" />
@@ -158,8 +188,6 @@
     border-radius: 3em;
     background-color: var(--surface-0);
     margin: 1rem 0;
-
-    height: 3em;
   }
 
   .input-field label {
@@ -189,9 +217,16 @@
     height: 100%;
     line-height: 2em;
     letter-spacing: 0.2em;
+
+    cursor: pointer;
   }
 
   .input-field:has(input[type="button"]) {
     border: 2px solid var(--accent);
+  }
+
+  input[type="password"] {
+    letter-spacing: 0.2em;
+    font-family: "Verdana", sans-serif;
   }
 </style>
